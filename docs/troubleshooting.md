@@ -15,7 +15,7 @@ Use a valid npm package version such as `2.1.4` or `2.1.4-beta.0`. The skill doe
 
 ## `yarn transpile` Fails
 
-The workflow stops before publishing that package. Fix the package build, then invoke the skill again with the same target version and `START_PACKAGE` set to the failed package.
+If the failure is clearly limited to the TypeScript compile stage, the workflow records a warning, skips that failed stage, and still runs `npm publish` for the current package. Other transpile failures, or failures whose stage cannot be identified confidently, stop the workflow before publishing.
 
 ## `npm publish` Reports Authentication or Registry Errors
 

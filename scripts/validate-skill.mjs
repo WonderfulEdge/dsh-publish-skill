@@ -17,6 +17,11 @@ for (const required of [
   'yarn transpile',
   'npm publish',
   '失败处理',
+  'TypeScript 编译失败已跳过',
+  '仍然对当前模块执行 `npm publish`',
+  '其他构建失败',
+  '不执行当前模块的 `npm publish`',
+  '`npm publish` 失败或输出无法明确判断是否成功时立即停止',
   '发布汇总',
 ]) {
   assert.ok(definition.content.includes(required), `SKILL.md is missing required guidance: ${required}`)

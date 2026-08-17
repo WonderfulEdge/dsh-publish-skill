@@ -23,7 +23,7 @@ The registration disposer is owned by a Cordis effect. Stopping, updating, or un
 
 Installing the plugin only reads packaged text and registers it. No release command runs at plugin activation time.
 
-The release side effects happen later through the normal agent tool and approval boundaries after a user explicitly invokes `/publish-skill`. The skill instructs the agent to validate scope, confirm the package order, process one package at a time, and stop on the first uncertain or failed operation.
+The release side effects happen later through the normal agent tool and approval boundaries after a user explicitly invokes `/publish-skill`. The skill instructs the agent to validate scope, confirm the package order, and process one package at a time. A transpile failure clearly limited to the TypeScript compile stage is recorded but still allows that package to publish; any other build failure, or a failed or uncertain publish, stops the workflow.
 
 ## Source of Truth
 
