@@ -1,0 +1,5 @@
+# Registers the packaged publish-skill in every profile that installs this bundle.
+
+- insert:
+    - id: dsh-publish-skill
+      name: dsh-publish-skill

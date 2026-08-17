@@ -1,0 +1,54 @@
+{
+  "name": "dsh-publish-skill",
+  "description": "User-invocable XDSP frontend release skill for DeepSeek Harness",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "skills/",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node tests/plugin.test.mjs",
+    "pack:check": "npm pack --dry-run --cache .npm-cache"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "skill",
+    "publish",
+    "xdsp"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WonderfulEdge/dsh-publish-skill.git"
+  },
+  "homepage": "https://github.com/WonderfulEdge/dsh-publish-skill#readme",
+  "bugs": {
+    "url": "https://github.com/WonderfulEdge/dsh-publish-skill/issues"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
