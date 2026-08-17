@@ -17,7 +17,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node tests/plugin.test.mjs",
+    "test": "npm run validate:skill && node tests/plugin.test.mjs",
+    "validate:skill": "node scripts/validate-skill.mjs",
     "pack:check": "npm pack --dry-run --cache .npm-cache"
   },
   "keywords": [
