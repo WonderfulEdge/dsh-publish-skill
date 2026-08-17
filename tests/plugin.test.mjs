@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 
-import { apply, inject, name } from '../lib/index.js'
+import { apply, inject, name, parseSkillSource } from '../lib/index.js'
 
 function testRegistrationLifecycle() {
   let registered
@@ -51,10 +51,19 @@ function testFrontmatter() {
     new URL('../skills/publish-skill/SKILL.md', import.meta.url),
     'utf8',
   )
+  const parsed = parseSkillSource(source, 'SKILL.md')
 
   assert.match(source, /^name: publish-skill$/m)
   assert.match(source, /^disable-model-invocation: true$/m)
   assert.match(source, /^user-invocable: true$/m)
+  assert.match(parsed.description, /XDSP/)
+  assert.match(parsed.content, /^# XDSP 前端发版/m)
+
+  assert.throws(
+    () => parseSkillSource(source.replace('user-invocable: true', 'user-invocable: false')),
+    /must be user-only/,
+  )
+  assert.throws(() => parseSkillSource('# no frontmatter'), /Invalid skill frontmatter/)
 }
 
 testRegistrationLifecycle()
