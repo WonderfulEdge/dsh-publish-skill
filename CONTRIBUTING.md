@@ -21,8 +21,8 @@ Release-flow changes must preserve these invariants:
 
 - `TARGET_VERSION` is required and never guessed.
 - Modules are processed serially.
-- A transpile failure clearly limited to the TypeScript compile stage may be skipped, allowing that module to publish.
-- Any other build failure, or a failed or uncertain publish, stops later modules and is not retried automatically.
+- Publication depends only on the transpile stage: when that stage has no errors, the TypeScript compile stage is ignored and the module may publish.
+- A transpile-stage failure, an unconfirmed transpile-stage result, or a failed or uncertain publish stops later modules and is not retried automatically.
 - The skill does not log in to npm, rewrite registry configuration, commit Git changes, or expose credentials.
 
 Update tests and user documentation in the same pull request when behavior changes.

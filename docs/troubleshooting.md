@@ -15,7 +15,7 @@ Use a valid npm package version such as `2.1.4` or `2.1.4-beta.0`. The skill doe
 
 ## `yarn transpile` Fails
 
-If the failure is clearly limited to the TypeScript compile stage, the workflow records a warning, skips that failed stage, and still runs `npm publish` for the current package. Other transpile failures, or failures whose stage cannot be identified confidently, stop the workflow before publishing.
+Inspect the command output by stage. If the transpile stage completed without errors, ignore the TypeScript compile stage entirely and run `npm publish`, even when TypeScript diagnostics make the overall command exit nonzero. A transpile-stage error, or an output that does not confirm transpile-stage success, stops the workflow before publishing.
 
 ## `npm publish` Reports Authentication or Registry Errors
 

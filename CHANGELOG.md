@@ -4,7 +4,7 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
-- Allow a module to publish when its transpile failure is clearly limited to the TypeScript compile stage; other build failures and publish failures still stop the workflow.
+- Base publication only on the transpile stage: ignore the subsequent TypeScript compile stage and publish when transpilation has no errors.
 - Derive runtime description and invocation policy from the canonical skill frontmatter.
 - Validate required release guidance and relative skill resources.
 - Verify the installable DSH bundle manifest.

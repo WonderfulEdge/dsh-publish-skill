@@ -9,7 +9,7 @@ XDSP 前端顺序发版插件，为 DeepSeek Harness 注册仅限用户调用的
 - 使用 `PACKAGE` 只发布一个模块。
 - 统一修改目标模块的 `package.json` 顶层 `version`。
 - 严格串行执行 `yarn transpile` 和 `npm publish`。
-- 首次发布前确认版本与有序模块列表；TypeScript 编译阶段失败时允许当前模块继续发布，其他构建失败或发布失败时立即停止。
+- 首次发布前确认版本与有序模块列表；只要 transpile 阶段无错误，就忽略 TypeScript 编译阶段结果并直接发布当前模块。
 - 不自动提交 Git、不修改 lockfile、不自动登录或更改 npm registry。
 
 技能声明了 `disable-model-invocation: true`，模型不会自行选择它。只有用户输入 `/publish-skill` 才会加载发布指令。

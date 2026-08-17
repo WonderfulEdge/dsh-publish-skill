@@ -52,7 +52,7 @@ Task Progress:
 
 ## 2. 逐模块发布
 
-严格串行处理列表。必须等待当前模块的 `transpile` 得出结果后才能决定下一步：成功时执行该模块的 `publish`；若失败原因能明确确认仅来自 TypeScript 编译阶段，则跳过该失败阶段并仍然执行当前模块的 `publish`。执行了 `publish` 时，必须等待其成功后才能进入下一个模块。
+严格串行处理列表。必须等待当前模块的 `yarn transpile` 执行完毕，并按输出区分 transpile 阶段与 TypeScript 编译阶段。只要 transpile 阶段没有报错，就忽略 TypeScript 编译阶段的全部结果并执行当前模块的 `npm publish`；即使命令最终因 TypeScript 错误返回非零，也不得阻止发布。执行了 `npm publish` 时，必须等待其成功后才能进入下一个模块。
 
 对每个 `<pkg>`：
 
@@ -65,7 +65,7 @@ Task Progress:
 yarn transpile
 ```
 
-5. `yarn transpile` 成功，或者失败原因能明确确认仅来自 TypeScript 编译阶段时，在同一目录继续执行：
+5. 检查 `yarn transpile` 的分阶段输出。只要 transpile 阶段没有报错，就不检查 TypeScript 编译阶段是否成功，并在同一目录直接执行：
 
 ```bash
 npm publish
@@ -75,18 +75,18 @@ npm publish
 
 ### 失败处理
 
-#### TypeScript 编译阶段失败
+#### 忽略 TypeScript 编译阶段
 
-`yarn transpile` 返回失败时，检查输出并确认失败阶段。只有日志明确指向 TypeScript 编译阶段（例如 `tsc` 或 `TSxxxx` 诊断），且没有同时出现其他构建阶段错误时，才允许跳过该失败：
+TypeScript 编译阶段不参与是否发布的判定：
 
-- 记录模块、TypeScript 编译阶段和关键错误信息，并标记为“TypeScript 编译失败已跳过”。
-- 不自动重试 `yarn transpile`，仍然对当前模块执行 `npm publish`。
-- `npm publish` 成功后继续处理有序列表中的下一个模块，不需要再次询问用户。
-- 不得把无法确认阶段的失败、依赖缺失、脚本启动失败或其他构建工具错误归类为可跳过的 TypeScript 编译失败。
+- transpile 阶段无错误后，直接忽略所有 TypeScript 诊断、错误数量和该阶段的成功或失败状态。
+- 即使 `yarn transpile` 最终退出码因 TypeScript 编译错误而非零，也继续对当前模块执行 `npm publish`。
+- 不分析、不修复、不重试 TypeScript 编译阶段，也不因该阶段失败询问用户。
+- `npm publish` 成功后继续处理有序列表中的下一个模块。
 
-#### 其他构建失败
+#### transpile 阶段失败
 
-`yarn transpile` 的失败不满足上述条件时立即停止，不执行当前模块的 `npm publish`，也不处理后续模块。记录失败模块、构建阶段和关键错误信息，且不自动重试。
+transpile 阶段出现错误，或者命令输出无法确认 transpile 阶段已无错误完成时，立即停止；不执行当前模块的 `npm publish`，也不处理后续模块。记录失败模块、transpile 阶段和关键错误信息，且不自动重试。不得把 transpile 阶段错误当作可忽略的 TypeScript 编译错误。
 
 #### npm 发布失败或状态不确定
 
@@ -104,16 +104,16 @@ npm publish
 
 结束时输出：
 
-- 成功发布的模块及版本号；其中带有已跳过 TypeScript 编译失败的模块必须单独标注，并附关键编译错误信息。
-- 其他构建失败、发布失败或状态待核实的模块、阶段和原因；没有这类失败则明确写明。
-- 因其他构建失败、发布失败或状态不确定而未处理的后续模块。
+- 成功发布的模块及版本号；TypeScript 编译阶段结果已按规则忽略，无需把该阶段错误列为发布失败。
+- transpile 阶段失败、发布失败或状态待核实的模块、阶段和原因；没有这类失败则明确写明。
+- 因 transpile 阶段失败、发布失败或状态不确定而未处理的后续模块。
 - 已修改版本但未确认发布成功的模块。
 - 本次使用的 registry（可从各模块 `publishConfig.registry` 或 npm 配置判断时）。
 - 明确说明没有执行 git commit，除非用户另有要求。
 
 ## 快捷脚本
 
-若根目录已有 `deploy-run.sh`，可在 Bash 环境下使用，但必须先读取脚本并确认它满足本技能的范围、顺序、版本要求，并且只会跳过明确属于 TypeScript 编译阶段的失败、随后仍发布当前模块，其他构建失败或发布失败时会停止。需要使用时：
+若根目录已有 `deploy-run.sh`，可在 Bash 环境下使用，但必须先读取脚本并确认它满足本技能的范围、顺序、版本要求，并且只根据 transpile 阶段结果决定是否发布、完全忽略 TypeScript 编译阶段，transpile 阶段失败或发布失败时会停止。需要使用时：
 
 1. 只将脚本的 `CURRENT_VERSION` 改为 `TARGET_VERSION`。
 2. 按需设置 `START_PACKAGE`。
