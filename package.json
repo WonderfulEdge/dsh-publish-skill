@@ -13,6 +13,10 @@
     "lib/",
     "skills/",
     "cordis.patch.yml",
+    "docs/",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
     "README.md",
     "LICENSE"
   ],

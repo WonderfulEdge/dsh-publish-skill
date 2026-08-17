@@ -87,6 +87,14 @@ npm run pack:check
 
 插件入口从包内读取 canonical `SKILL.md`，通过 `ctx.skills.register()` 注册运行时技能，并将注销函数交给 Cordis effect 管理。停用或卸载插件时，技能贡献会同步移除。
 
+## 维护文档
+
+- [架构与信任边界](docs/architecture.md)
+- [故障排查](docs/troubleshooting.md)
+- [贡献指南](CONTRIBUTING.md)
+- [安全策略](SECURITY.md)
+- [变更记录](CHANGELOG.md)
+
 ## License
 
 [MIT](LICENSE)
